@@ -1,14 +1,35 @@
 dependencies {
-    implementation project(':soapui')
-    compileOnly 'com.smartbear:ready-api-soapui-pro:2.8.0'
-    compileOnly 'com.smartbear.soapui:soapui:5.5.0'
+  implementation(project(':soapui'))
+  compileOnly('com.smartbear:ready-api-soapui-pro:2.8.0') {
+      exclude module: 'out-app-analytics-provider'
+  }
+  compileOnly('com.smartbear.soapui:soapui:5.5.0') {
+    exclude module: 'out-app-analytics-provider'
+  }
+}
+
+def listenerXmlFile = file("$projectDir/src/main/resources/reportportal-listeners.xml")
+def listenerXmlArtifact = artifacts.add('archives', listenerXmlFile) {
+  type = 'xml'
+  classifier = 'listeners'
+}
+
+publishing {
+  publications {
+    maven(MavenPublication) {
+      artifact listenerXmlArtifact
+    }
+    shadow(MavenPublication) {
+      artifact shadowJar
+    }
+  }
 }
 
 shadowJar {
-    dependencies {
-        exclude(dependency('com.smartbear.soapui:soapui'))
-        exclude(dependency('org.slf4j:slf4j-api'))
-        exclude(dependency('org.slf4j:slf4j-ext'))
-        exclude(dependency('org.slf4j:slf4j-log4j12'))
-    }
+  dependencies {
+    exclude(dependency('com.smartbear.soapui:soapui'))
+    exclude(dependency('org.slf4j:slf4j-api'))
+    exclude(dependency('org.slf4j:slf4j-ext'))
+    exclude(dependency('org.slf4j:slf4j-log4j12'))
+  }
 }

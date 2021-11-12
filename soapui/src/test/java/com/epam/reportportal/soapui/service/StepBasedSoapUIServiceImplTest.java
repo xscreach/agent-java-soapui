@@ -1,25 +1,38 @@
 package com.epam.reportportal.soapui.service;
 
+import static com.epam.reportportal.soapui.service.StepBasedSoapUIServiceImpl.ID;
+import static com.epam.reportportal.soapui.service.StepBasedSoapUIServiceImpl.RP_ITEM_PROPERTIES;
+import static com.epam.reportportal.soapui.service.StepBasedSoapUIServiceImpl.TEST_CASE_ID_PROPERTY;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+
 import com.epam.reportportal.listeners.ListenerParameters;
 import com.epam.reportportal.service.Launch;
 import com.epam.reportportal.service.ReportPortal;
 import com.epam.ta.reportportal.ws.model.StartTestItemRQ;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.model.testsuite.*;
+import com.eviware.soapui.model.testsuite.TestCase;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.TestSuite;
+
 import io.reactivex.Maybe;
-import org.junit.Assert;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.epam.reportportal.soapui.service.StepBasedSoapUIServiceImpl.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
 
 /**
  * @author <a href="mailto:ivan_budayeu@epam.com">Ivan Budayeu</a>
@@ -98,9 +111,9 @@ public class StepBasedSoapUIServiceImplTest {
 
 		StartTestItemRQ request = suiteRqCaptor.getValue();
 
-		Assert.assertEquals(SUITE_NAME, request.getName());
-		Assert.assertEquals(SUITE_CODE_REF, request.getCodeRef());
-		Assert.assertEquals(SUITE_CODE_REF, request.getTestCaseId());
+		assertEquals(SUITE_NAME, request.getName());
+		assertEquals(SUITE_CODE_REF, request.getCodeRef());
+		assertEquals(SUITE_CODE_REF, request.getTestCaseId());
 	}
 
 	@Test
@@ -142,9 +155,9 @@ public class StepBasedSoapUIServiceImplTest {
 
 		StartTestItemRQ request = suiteRqCaptor.getValue();
 
-		Assert.assertEquals(SUITE_NAME, request.getName());
-		Assert.assertEquals(SUITE_CODE_REF, request.getCodeRef());
-		Assert.assertEquals(customTestCaseId, request.getTestCaseId());
+		assertEquals(SUITE_NAME, request.getName());
+		assertEquals(SUITE_CODE_REF, request.getCodeRef());
+		assertEquals(customTestCaseId, request.getTestCaseId());
 
 	}
 
@@ -185,9 +198,9 @@ public class StepBasedSoapUIServiceImplTest {
 
 		StartTestItemRQ request = testCaseRqCaptor.getValue();
 
-		Assert.assertEquals(TEST_CASE_NAME, request.getName());
-		Assert.assertEquals(TEST_CASE_CODE_REF, request.getCodeRef());
-		Assert.assertEquals(TEST_CASE_CODE_REF, request.getTestCaseId());
+		assertEquals(TEST_CASE_NAME, request.getName());
+		assertEquals(TEST_CASE_CODE_REF, request.getCodeRef());
+		assertEquals(TEST_CASE_CODE_REF, request.getTestCaseId());
 	}
 
 	@Test
@@ -235,9 +248,9 @@ public class StepBasedSoapUIServiceImplTest {
 
 		StartTestItemRQ request = testCaseRqCaptor.getValue();
 
-		Assert.assertEquals(TEST_CASE_NAME, request.getName());
-		Assert.assertEquals(TEST_CASE_CODE_REF, request.getCodeRef());
-		Assert.assertEquals(customTestCaseId, request.getTestCaseId());
+		assertEquals(TEST_CASE_NAME, request.getName());
+		assertEquals(TEST_CASE_CODE_REF, request.getCodeRef());
+		assertEquals(customTestCaseId, request.getTestCaseId());
 	}
 
 	@Test
@@ -292,9 +305,9 @@ public class StepBasedSoapUIServiceImplTest {
 
 		StartTestItemRQ request = testStepRqCaptor.getValue();
 
-		Assert.assertEquals(TEST_STEP_NAME, request.getName());
-		Assert.assertEquals(TEST_STEP_CODE_REF, request.getCodeRef());
-		Assert.assertEquals(TEST_STEP_CODE_REF, request.getTestCaseId());
+		assertEquals(TEST_STEP_NAME, request.getName());
+		assertEquals(TEST_STEP_CODE_REF, request.getCodeRef());
+		assertEquals(TEST_STEP_CODE_REF, request.getTestCaseId());
 	}
 
 	@Test
@@ -358,9 +371,9 @@ public class StepBasedSoapUIServiceImplTest {
 
 		StartTestItemRQ request = testStepRqCaptor.getValue();
 
-		Assert.assertEquals(TEST_STEP_NAME, request.getName());
-		Assert.assertEquals(TEST_STEP_CODE_REF, request.getCodeRef());
-		Assert.assertEquals(customTestCaseId, request.getTestCaseId());
+		assertEquals(TEST_STEP_NAME, request.getName());
+		assertEquals(TEST_STEP_CODE_REF, request.getCodeRef());
+		assertEquals(customTestCaseId, request.getTestCaseId());
 
 	}
 

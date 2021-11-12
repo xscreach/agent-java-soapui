@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:soapui-listeners xmlns:tns="http://eviware.com/soapui/config">
+  <tns:listener id="TestStepListener" listenerClass="com.epam.reportportal.readyapi.RPReadyApiTestRunListener" listenerInterface="com.eviware.soapui.model.testsuite.TestRunListener"/>
+  <tns:listener id="TestCaseListener" listenerClass="com.epam.reportportal.readyapi.RPReadyApiTestSuiteRunListener" listenerInterface="com.eviware.soapui.model.testsuite.TestSuiteRunListener"/>
+  <tns:listener id="TestSuiteListener" listenerClass="com.epam.reportportal.readyapi.RPReadyApiProjectRunListener" listenerInterface="com.eviware.soapui.model.testsuite.ProjectRunListener"/>
+</tns:soapui-listeners>

@@ -35,8 +35,11 @@ public class GroovyScriptLogger extends ResultLogger<TestStepResult> {
 	@Override
 	protected List<SaveLogRQ> prepareLogs(TestStepResult result) {
 		WsdlGroovyScriptTestStep step = ((WsdlGroovyScriptTestStep) result.getTestStep());
-		return Arrays.asList(prepareEntity("INFO", "Executing script:"),
-				prepareEntity("INFO", MarkdownUtils.asCode("groovy", step.getScript())));
+		return Arrays.asList(prepareEntity("INFO", "Executed script:"),
+				prepareEntity("INFO", MarkdownUtils.asCode("groovy", step.getScript())),
+				prepareEntity("INFO", "With result:"),
+				prepareEntity("INFO", MarkdownUtils.asCode("groovy", step.getPropertyValue("result")))
+				);
 	}
 
 	@Override
