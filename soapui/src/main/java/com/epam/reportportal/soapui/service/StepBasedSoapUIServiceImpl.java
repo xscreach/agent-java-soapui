@@ -247,7 +247,7 @@ public class StepBasedSoapUIServiceImpl implements SoapUIService {
                 ReportPortal.emitLog(logStepData, "INFO", Calendar.getInstance().getTime());
             }
             for (final SaveLogRQ rq : getStepLogReport(testStepContext)) {
-                ReportPortal.emitLog((Function<String, SaveLogRQ>) id -> {
+                ReportPortal.emitLog(id -> {
                     rq.setItemUuid(id);
                     return rq;
                 });
@@ -291,13 +291,15 @@ public class StepBasedSoapUIServiceImpl implements SoapUIService {
         if (testStepContext.getError() != null) {
             message = "Exception: " + testStepContext.getError().getMessage() + LINE_SEPARATOR
                     + this.getStackTraceContext(testStepContext.getError());
-        } else {
+        } else if (testStepContext.getMessages() != null && testStepContext.getMessages().length > 0) {
             StringBuilder messages = new StringBuilder();
             for (String messageLog : testStepContext.getMessages()) {
                 messages.append(messageLog);
                 messages.append(LINE_SEPARATOR);
             }
             message = messages.toString();
+        } else {
+            message = "Unknown error - see run logs for details";
         }
         return message;
     }
