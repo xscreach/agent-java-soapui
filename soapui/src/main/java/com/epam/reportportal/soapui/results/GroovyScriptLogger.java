@@ -15,35 +15,54 @@
  */
 package com.epam.reportportal.soapui.results;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.epam.reportportal.utils.markdown.MarkdownUtils;
 import com.epam.ta.reportportal.ws.model.log.SaveLogRQ;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlGroovyScriptTestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Andrei Varabyeu
  */
 public class GroovyScriptLogger extends ResultLogger<TestStepResult> {
 
-	public GroovyScriptLogger() {
-		super(TestStepResult.class);
-	}
+  public GroovyScriptLogger() {
+    super(TestStepResult.class);
+  }
 
-	@Override
-	protected List<SaveLogRQ> prepareLogs(TestStepResult result) {
-		WsdlGroovyScriptTestStep step = ((WsdlGroovyScriptTestStep) result.getTestStep());
-		return Arrays.asList(prepareEntity("INFO", "Executed script:"),
-				prepareEntity("INFO", MarkdownUtils.asCode("groovy", step.getScript())),
-				prepareEntity("INFO", "With result:"),
-				prepareEntity("INFO", MarkdownUtils.asCode("groovy", step.getPropertyValue("result")))
-				);
-	}
+  @Override
+  public boolean supports(TestStepResult result) {
+    return super.supports(result) && WsdlGroovyScriptTestStep.class.isAssignableFrom(result.getTestStep().getClass());
+  }
 
-	@Override
-	public boolean supports(TestStepResult result) {
-		return super.supports(result) && WsdlGroovyScriptTestStep.class.isAssignableFrom(result.getTestStep().getClass());
-	}
+  @Override
+  protected List<SaveLogRQ> prepareLogs(TestStepResult result) {
+    if (!result.isDiscarded()) {
+      WsdlGroovyScriptTestStep step = ((WsdlGroovyScriptTestStep) result.getTestStep());
+      String scriptResult = step.getPropertyValue("result");
+      List<SaveLogRQ> logs = Arrays.asList(
+          prepareEntity("INFO", "Executed script:"),
+          prepareEntity("INFO", MarkdownUtils.asCode("groovy", step.getScript()))
+      );
+
+      if (scriptResult != null && !"null".equals(scriptResult)) {
+        logs.add(prepareEntity("INFO", "With result:"));
+        logs.add(prepareEntity("INFO", MarkdownUtils.asCode("groovy", scriptResult)));
+      }
+      Throwable scriptError = result.getError();
+      if (scriptError != null) {
+        StringWriter stackTraceWriter = new StringWriter();
+        scriptError.printStackTrace(new PrintWriter(stackTraceWriter));
+        logs.add(prepareEntity("ERROR", "Raised exception:"));
+        logs.add(prepareEntity("INFO", MarkdownUtils.asCode("groovy", stackTraceWriter.toString())));
+      }
+      return logs;
+    }
+    return new ArrayList<>();
+  }
 }
